@@ -16,7 +16,9 @@ void storeUserInfo(const UserInfo& user) {
     }
 }
 
-double getAccountBalance(int accountNumber, const std::string& passwordHash) {
+double getAccountBalance(int accountNumber, const std::string& password) {
+    std::size_t passwordHash = hashPassword(password);
+    std::size_t idHash = hashID(accountNumber);
     std::ifstream inFile("user_data.txt");
     int storedAccountNumber;
     std::string storedPasswordHash;
@@ -32,7 +34,9 @@ double getAccountBalance(int accountNumber, const std::string& passwordHash) {
     return -1.0;
 }
 
-bool logIn(int accountNumber, const std::string& passwordHash) {
+bool logIn(int accountNumber, const std::string& password) {
+    std::size_t passwordHash = hashPassword(password);
+    std::size_t idHash = hashID(accountNumber);
     std::ifstream inFile("user_data.txt");
     int storedAccountNumber;
     std::string storedPasswordHash;
@@ -47,6 +51,48 @@ bool logIn(int accountNumber, const std::string& passwordHash) {
     return false;
 }
 
+void updateBalance(int accountNumber, const std::string& password, double amount) {
+    std::size_t passwordHash = hashPassword(password);
+    std::size_t idHash = hashID(accountNumber);
+    std::ifstream inFile("user_data.txt");
+    std::ofstream outFile("temp_user_data.txt");
+
+    if (!inFile.is_open() || !outFile.is_open()) {
+        std::cerr << "Unable to open file for reading or writing\n";
+        return;
+    }
+
+    int storedAccountNumber;
+    std::size_t storedPasswordHash;
+    double balance;
+    bool updated = false;
+
+    while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
+        if (storedAccountNumber == idHash && storedPasswordHash == passwordHash) {
+            balance += amount;
+            updated = true;
+        }
+        outFile << storedAccountNumber << " " << storedPasswordHash << " " << balance << "\n";
+    }
+
+    inFile.close();
+    outFile.close();
+
+    if (!updated) {
+        std::cout << "Failed to update balance. Invalid account number or password." << std::endl;
+        remove("temp_user_data.txt");
+        return;
+    }
+
+    remove("user_data.txt");
+    rename("temp_user_data.txt", "user_data.txt");
+}
+
+
 std::size_t hashPassword(const std::string& password) {
     return std::hash<std::string>{}(password);
+}
+
+std::size_t hashID(int& user_id) {
+    return std::hash<int>{}(user_id);
 }

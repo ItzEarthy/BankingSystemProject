@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="user_data.txt" />
+    <Text Include="temp_user_data.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BankFunctions.h">
