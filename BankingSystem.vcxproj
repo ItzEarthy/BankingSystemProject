@@ -131,6 +131,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="user_data.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="BankFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

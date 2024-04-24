@@ -23,6 +23,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="user_data.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="BankFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
