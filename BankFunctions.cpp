@@ -17,14 +17,13 @@ void storeUserInfo(const UserInfo& user) {
 }
 
 double getAccountBalance(int accountNumber, const std::string& password) {
-    std::size_t passwordHash = hashPassword(password);
-    std::size_t idHash = hashID(accountNumber);
     std::ifstream inFile("user_data.txt");
     int storedAccountNumber;
     std::string storedPasswordHash;
     double balance;
+
     while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
-        if (storedAccountNumber == accountNumber && storedPasswordHash == passwordHash) {
+        if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
             inFile.close();
             return balance;
         }
@@ -35,13 +34,12 @@ double getAccountBalance(int accountNumber, const std::string& password) {
 }
 
 bool logIn(int accountNumber, const std::string& password) {
-    std::size_t passwordHash = hashPassword(password);
-    std::size_t idHash = hashID(accountNumber);
     std::ifstream inFile("user_data.txt");
     int storedAccountNumber;
     std::string storedPasswordHash;
+
     while (inFile >> storedAccountNumber >> storedPasswordHash) {
-        if (storedAccountNumber == accountNumber && storedPasswordHash == passwordHash) {
+        if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
             std::cout << "SIGNIN SUCCSESSFUL";
             return true;
         }
@@ -51,9 +49,7 @@ bool logIn(int accountNumber, const std::string& password) {
     return false;
 }
 
-void updateBalance(int accountNumber, const std::string& password, double amount) {
-    std::size_t passwordHash = hashPassword(password);
-    std::size_t idHash = hashID(accountNumber);
+void updateBalance(int accountNumber, const std::string& password, double* amount, int i) {
     std::ifstream inFile("user_data.txt");
     std::ofstream outFile("temp_user_data.txt");
 
@@ -63,13 +59,13 @@ void updateBalance(int accountNumber, const std::string& password, double amount
     }
 
     int storedAccountNumber;
-    std::size_t storedPasswordHash;
+    std::string storedPasswordHash;
     double balance;
     bool updated = false;
 
     while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
-        if (storedAccountNumber == idHash && storedPasswordHash == passwordHash) {
-            balance += amount;
+        if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
+            //balance += amount;
             updated = true;
         }
         outFile << storedAccountNumber << " " << storedPasswordHash << " " << balance << "\n";
@@ -96,3 +92,4 @@ std::size_t hashPassword(const std::string& password) {
 std::size_t hashID(int& user_id) {
     return std::hash<int>{}(user_id);
 }
+
