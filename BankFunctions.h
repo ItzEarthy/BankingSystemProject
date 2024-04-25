@@ -17,4 +17,4 @@ std::size_t hashID(int& user_id);
 
 bool logIn(int accountNumber, const std::string& passwordHash);
 
-void updateBalance(int accountNumber, const std::string& password, double amount);
+void updateBalance(int accountNumber, const std::string& password, double* amount, int i);
