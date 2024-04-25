@@ -62,10 +62,14 @@ void updateBalance(int accountNumber, const std::string& password, double* amoun
     std::string storedPasswordHash;
     double balance;
     bool updated = false;
+    double trueAmount = 0;
 
     while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
         if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
-            //balance += amount;
+            for (int u = 0; u < i; u++) {
+                trueAmount += amount[u];
+            }
+            balance += trueAmount;
             updated = true;
         }
         outFile << storedAccountNumber << " " << storedPasswordHash << " " << balance << "\n";
