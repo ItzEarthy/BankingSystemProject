@@ -40,12 +40,12 @@ bool logIn(int accountNumber, const std::string& password) {
 
     while (inFile >> storedAccountNumber >> storedPasswordHash) {
         if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
-            std::cout << "SIGNIN SUCCSESSFUL";
+            std::cout << "SIGNIN SUCCSESSFUL" << std::endl;
             return true;
         }
     }
     inFile.close();
-    std::cout << "INCORRECT PASSWORD OR USER ID";
+    std::cout << "INCORRECT PASSWORD OR USER ID" << std::endl;
     return false;
 }
 
@@ -97,3 +97,21 @@ std::size_t hashID(int& user_id) {
     return std::hash<int>{}(user_id);
 }
 
+bool accountExists(int accountNumber) {
+    std::ifstream inFile("user_data.txt");
+    if (!inFile.is_open()) {
+        std::cerr << "Unable to open file for reading\n";
+        return false;
+    }
+    int storedAccountNumber;
+    std::size_t storedPasswordHash;
+    double balance;
+    while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
+        if (storedAccountNumber == accountNumber) {
+            inFile.close();
+            return true;
+        }
+    }
+    inFile.close();
+    return false;
+}
