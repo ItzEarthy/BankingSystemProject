@@ -18,8 +18,7 @@ int main() {
     std::mt19937 gen(seed());
     std::uniform_int_distribution<> rand_id(1111, 9999);
 
-    /// ID: 4800 PW: 4800
-    /// ID: 6819 PW: 6819
+    
 
     while (logged_in == false) {
         std::cout << "WELCOME TO CPP BANK\n\n(1) CREATE ACCOUNT\n(2) LOG IN" << std::endl;
@@ -29,33 +28,33 @@ int main() {
 
         if (menu_input == 1) {
             ///ADD random ID number and also check if the id is already being used
+            while (menu_input == 1) {
+                for (int i = 0; 0 < 10000; i++) {
+                    make_user_id = rand_id(gen);
 
-            make_user_id = rand_id(gen);
 
-            while (accountExists(make_user_id)) {
-                std::cout << "Trying again";
-                make_user_id = rand_id(gen);
+                    if (accountExists(hashID(make_user_id))) {
+                        std::cout << "Trying again" << std::endl;
+                        make_user_id = rand_id(gen);
 
+                    }
+
+                    if (!accountExists(hashID(make_user_id))) {
+                        std::cout << "Your User ID: " << make_user_id << std::endl;
+                        std::cout << "Create Password: ";
+                        //std::cin >> make_password;
+
+
+                        UserInfo UserMake = { hashID(make_user_id), std::to_string(hashPassword(make_password)), 0.00 };
+                        storeUserInfo(UserMake);
+                        std::cout << "ACCOUNT CREATED \n" << std::endl;
+
+                        make_password = "password";
+                        make_user_id = 0;
+                        menu_input = 0;
+                    }
+                }
             }
-
-            if (!accountExists(make_user_id)) {
-                std::cout << "Your User ID: " << make_user_id << std::endl;
-                std::cout << "Create Password: ";
-                std::cin >> make_password;
-               
-
-                UserInfo UserMake = { hashID(make_user_id), std::to_string(hashPassword(make_password)), 0.0 };
-                storeUserInfo(UserMake);
-                std::cout << "ACCOUNT CREATED \n" << std::endl;
-
-                make_password = "";
-                make_user_id = 0;
-                menu_input = 0;
-            }
-            else {
-                std::cout << "Trying again";
-            }
-
         }
         if (menu_input == 2) {
             std::cout << "Enter User ID: ";
@@ -67,8 +66,9 @@ int main() {
             //std::cout << hashID(user_id) << std::endl;
             //std::cout << hashPassword(password);
            
-            logged_in = logIn(hashID(user_id), std::to_string(hashPassword(password))); ;
-            
+            logged_in = logIn(hashID(user_id), std::to_string(hashPassword(password)));
+            //logged_in = logIn(user_id, std::to_string(hashPassword(password)));
+            menu_input = 0;
         }
 
     }
@@ -116,7 +116,7 @@ int main() {
                 }
                 else {
                     std::cout << "Invalid input please try again" << std::endl;
-                    check == 0;
+                    check = 0;
                 }
                 std::cout << "Would you like to make another withdrawal?(1) If not continue by pressing(2)" << std::endl;
                 std::cin >> check;

@@ -5,10 +5,11 @@
 #include <iomanip>
 
 
+
 void storeUserInfo(const UserInfo& user) {
     std::ofstream outFile("user_data.txt", std::ios::app);
     if (outFile.is_open()) {
-        outFile << user.accountNumber << " " << user.passwordHash << " " << user.balance << "\n";
+        outFile << user.accountNumber << " " << user.passwordHash << " "<< std::fixed << std::setprecision(2) << user.balance << "\n";
         outFile.close();
     }
     else {
@@ -16,9 +17,9 @@ void storeUserInfo(const UserInfo& user) {
     }
 }
 
-double getAccountBalance(int accountNumber, const std::string& password) {
+double getAccountBalance(std::size_t accountNumber, const std::string& password) {
     std::ifstream inFile("user_data.txt");
-    int storedAccountNumber;
+    std::size_t storedAccountNumber;
     std::string storedPasswordHash;
     double balance;
 
@@ -32,14 +33,17 @@ double getAccountBalance(int accountNumber, const std::string& password) {
     inFile.close();
     return -1.0;
 }
-bool logIn(int accountNumber, const std::string& password) {
-    std::ifstream inFile("user_data.txt");
-    int storedAccountNumber;
-    std::string storedPasswordHash;
 
-    while (inFile >> storedAccountNumber >> storedPasswordHash) {
+bool logIn(std::size_t accountNumber, const std::string& password) {
+    std::ifstream inFile("user_data.txt");
+    std::size_t storedAccountNumber;
+    std::string storedPassword;
+
+    double balance;
+
+    while (inFile >> storedAccountNumber >> storedPassword >> balance) {
         // Compare hashed account number and password with stored hashed values
-        if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
+        if (storedAccountNumber == accountNumber && storedPassword == password) {
             std::cout << "SIGNIN SUCCESSFUL" << std::endl;
             inFile.close();
             return true;
@@ -51,7 +55,7 @@ bool logIn(int accountNumber, const std::string& password) {
 }
 
 
-void updateBalance(int accountNumber, const std::string& password, double* amount, int i) {
+void updateBalance(std::size_t accountNumber, const std::string& password, double* amount, int i) {
     std::ifstream inFile("user_data.txt");
     std::ofstream outFile("temp_user_data.txt");
 
@@ -60,7 +64,7 @@ void updateBalance(int accountNumber, const std::string& password, double* amoun
         return;
     }
 
-    int storedAccountNumber;
+    std::size_t storedAccountNumber;
     std::string storedPasswordHash;
     double balance;
     bool updated = false;
@@ -74,7 +78,7 @@ void updateBalance(int accountNumber, const std::string& password, double* amoun
             balance += trueAmount;
             updated = true;
         }
-        outFile << storedAccountNumber << " " << storedPasswordHash << " " << balance << "\n";
+        outFile << storedAccountNumber << " " << storedPasswordHash << " " << std::fixed << std::setprecision(2) << balance << "\n";
     }
 
     inFile.close();
@@ -92,23 +96,22 @@ void updateBalance(int accountNumber, const std::string& password, double* amoun
 
 
 std::size_t hashPassword(const std::string& password) {
-    std::cout << "Hashed Password" << std::hash<std::string>{}(password);
     return std::hash<std::string>{}(password);
 }
 
 std::size_t hashID(int& user_id) {
-    std::cout << "Hashed ID" << std::hash<int>{}(user_id);
     return std::hash<int>{}(user_id);
 }
 
-bool accountExists(int accountNumber) {
+
+bool accountExists(std::size_t accountNumber) {
     std::ifstream inFile("user_data.txt");
     if (!inFile.is_open()) {
         std::cerr << "Unable to open file for reading\n";
         return false;
     }
-    int storedAccountNumber;
-    std::size_t storedPasswordHash;
+    std::size_t storedAccountNumber;
+    std::string storedPasswordHash;
     double balance;
     while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
         if (storedAccountNumber == accountNumber) {
