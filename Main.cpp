@@ -4,10 +4,10 @@
 
 int main() {
     std::string password;
-    std::string make_password;
+    std::string make_password = "password";
     int user_id;
     int menu_input;
-    int make_user_id;
+    int make_user_id = 0000;
     int i = 0;
     int log_menu_input;
     bool logged_in = false;
@@ -24,20 +24,25 @@ int main() {
     while (logged_in == false) {
         std::cout << "WELCOME TO CPP BANK\n\n(1) CREATE ACCOUNT\n(2) LOG IN" << std::endl;
         std::cout << "Enter menu value: ";
+
         std::cin >> menu_input;
 
         if (menu_input == 1) {
             ///ADD random ID number and also check if the id is already being used
 
             make_user_id = rand_id(gen);
+
             while (accountExists(make_user_id)) {
+                std::cout << "Trying again";
                 make_user_id = rand_id(gen);
+
             }
 
             if (!accountExists(make_user_id)) {
                 std::cout << "Your User ID: " << make_user_id << std::endl;
                 std::cout << "Create Password: ";
                 std::cin >> make_password;
+               
 
                 UserInfo UserMake = { hashID(make_user_id), std::to_string(hashPassword(make_password)), 0.0 };
                 storeUserInfo(UserMake);
@@ -47,6 +52,10 @@ int main() {
                 make_user_id = 0;
                 menu_input = 0;
             }
+            else {
+                std::cout << "Trying again";
+            }
+
         }
         if (menu_input == 2) {
             std::cout << "Enter User ID: ";
@@ -55,8 +64,10 @@ int main() {
             std::cin >> password;
             //password = std::to_string(hashPassword(password));
             //user_id = hashID(user_id);
+            //std::cout << hashID(user_id) << std::endl;
+            //std::cout << hashPassword(password);
            
-            logged_in = logIn(hashID(user_id), std::to_string(hashPassword(password)));
+            logged_in = logIn(hashID(user_id), std::to_string(hashPassword(password))); ;
             
         }
 
@@ -95,7 +106,6 @@ int main() {
         // Ask amount and withdrawl
        
         if (log_menu_input == 2) {
-            std::cout << "POOPY";
             int check = 1;
             while (check == 1) {
                 std::cout << "Please enter amount that you would like to withdraw from your account:" << std::endl;
@@ -105,7 +115,7 @@ int main() {
                     updateBalance(hashID(user_id), std::to_string(hashPassword(password)), amount, 1);
                 }
                 else {
-                    std::cout << "Invalid input please try again POOPY" << std::endl;
+                    std::cout << "Invalid input please try again" << std::endl;
                     check == 0;
                 }
                 std::cout << "Would you like to make another withdrawal?(1) If not continue by pressing(2)" << std::endl;

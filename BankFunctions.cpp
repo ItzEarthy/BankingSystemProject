@@ -32,15 +32,16 @@ double getAccountBalance(int accountNumber, const std::string& password) {
     inFile.close();
     return -1.0;
 }
-
 bool logIn(int accountNumber, const std::string& password) {
     std::ifstream inFile("user_data.txt");
     int storedAccountNumber;
     std::string storedPasswordHash;
 
     while (inFile >> storedAccountNumber >> storedPasswordHash) {
+        // Compare hashed account number and password with stored hashed values
         if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
-            std::cout << "SIGNIN SUCCSESSFUL" << std::endl;
+            std::cout << "SIGNIN SUCCESSFUL" << std::endl;
+            inFile.close();
             return true;
         }
     }
@@ -48,6 +49,7 @@ bool logIn(int accountNumber, const std::string& password) {
     std::cout << "INCORRECT PASSWORD OR USER ID" << std::endl;
     return false;
 }
+
 
 void updateBalance(int accountNumber, const std::string& password, double* amount, int i) {
     std::ifstream inFile("user_data.txt");
@@ -90,10 +92,12 @@ void updateBalance(int accountNumber, const std::string& password, double* amoun
 
 
 std::size_t hashPassword(const std::string& password) {
+    std::cout << "Hashed Password" << std::hash<std::string>{}(password);
     return std::hash<std::string>{}(password);
 }
 
 std::size_t hashID(int& user_id) {
+    std::cout << "Hashed ID" << std::hash<int>{}(user_id);
     return std::hash<int>{}(user_id);
 }
 
