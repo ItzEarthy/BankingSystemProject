@@ -1,6 +1,7 @@
 #include "BankFunctions.h"
 #include <iostream>
 #include <random>
+#include <iomanip>
 
 int main() {
     std::string password;
@@ -75,7 +76,7 @@ int main() {
 
     while (logged_in == true) {
         
-        std::cout << "\n CURRENT BALANCE: $" << getAccountBalance(hashID(user_id), std::to_string(hashPassword(password))) << "\n(1) Depostit\n(2) Withdrawl\n(3) Transfer\n(4) Log Out\n(5) Delete Account" << std::endl;
+        std::cout << "\n CURRENT BALANCE: $" << std::fixed << std::setprecision(2)<< getAccountBalance(hashID(user_id), std::to_string(hashPassword(password))) << "\n(1) Depostit\n(2) Withdrawl\n(3) Transfer\n(4) Log Out\n(5) Delete Account" << std::endl;
         std::cin >> log_menu_input;
         /// Deposit Money
         // Ask how many deposits they have and use array
