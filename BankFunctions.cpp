@@ -122,3 +122,88 @@ bool accountExists(std::size_t accountNumber) {
     inFile.close();
     return false;
 }
+
+void updateTransfer(std::size_t accountNumber, std::string password, double amount, bool removeMoney) {
+    std::ifstream inFile("user_data.txt");
+    std::ofstream outFile("temp_user_data.txt");
+
+    if (!inFile.is_open() || !outFile.is_open()) {
+        std::cerr << "Unable to open file for reading or writing\n";
+        return;
+    }
+
+    std::size_t storedAccountNumber;
+    std::string storedPasswordHash;
+    double balance;
+    bool updated = false;
+
+    while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
+        if (storedAccountNumber == accountNumber && storedPasswordHash == password && removeMoney == true) {
+            balance -= amount;
+            updated = true;
+        }
+        if (storedAccountNumber == accountNumber && removeMoney == false) {
+            balance += amount;
+            updated = true;
+        }
+        outFile << storedAccountNumber << " " << storedPasswordHash << " " << std::fixed << std::setprecision(2) << balance << "\n";
+    }
+
+    inFile.close();
+    outFile.close();
+
+    if (!updated) {
+        std::cout << "Failed to update balance. Invalid account number or password." << std::endl;
+        remove("temp_user_data.txt");
+        return;
+    }
+
+    remove("user_data.txt");
+    rename("temp_user_data.txt", "user_data.txt");
+}
+
+void transfer(std::size_t accountNumber, const std::string& password, std::size_t transferAccountNumber, double amount) {
+    updateTransfer(accountNumber, password, amount, true);
+    updateTransfer(transferAccountNumber, password, amount, false);
+}
+
+void deleteAccount(std::size_t accountNumber, const std::string& password) {
+    std::ifstream inFile("user_data.txt");
+    std::ofstream outFile("temp_user_data.txt");
+
+    if (!inFile.is_open() || !outFile.is_open()) {
+        std::cerr << "Unable to open file for reading or writing\n";
+        return;
+    }
+
+    std::size_t storedAccountNumber;
+    std::size_t deleteNumber = 0;
+    std::string deletePass = "";
+    std::string storedPasswordHash;
+    double balance;
+    bool updated = false;
+
+    while (inFile >> storedAccountNumber >> storedPasswordHash >> balance) {
+        if (storedAccountNumber == accountNumber && storedPasswordHash == password) {
+            storedAccountNumber = deleteNumber;
+            storedPasswordHash = deletePass;
+            balance = 0;
+            
+            updated = true;
+        }
+        outFile << storedAccountNumber << " " << storedPasswordHash << "" << std::fixed << std::setprecision(2) << balance << "\n";
+        
+    }
+
+    inFile.close();
+    outFile.close();
+
+    if (!updated) {
+        std::cout << "Failed to update balance. Invalid account number or password." << std::endl;
+        remove("temp_user_data.txt");
+        return;
+    }
+
+    remove("user_data.txt");
+    rename("temp_user_data.txt", "user_data.txt");
+}

@@ -7,6 +7,8 @@ int main() {
     std::string password;
     std::string make_password = "password";
     int user_id;
+    int delete_confirm;
+    int transfer_user_id;
     int menu_input;
     int make_user_id = 1111;
     int i = 0;
@@ -14,6 +16,7 @@ int main() {
     bool logged_in = false;
     bool system_run = true;
     double *amount = new double;
+    double transfer_amount;
     double withdraw_num;
     double placeholder = 0.0;
     std::random_device seed;
@@ -23,6 +26,7 @@ int main() {
     ///Demo accounts
     /// id: 7776 password: password
     /// id: 5328 password: iHrtC++
+    
     while (system_run == true) {
         while (logged_in == false) {
             std::cout << "WELCOME TO CPP BANK\n\n(1) CREATE ACCOUNT\n(2) LOG IN\n(3) SYSTEM SHUTDOWN" << std::endl;
@@ -129,7 +133,31 @@ int main() {
             // Have user put in account number and vaidate if true
             // Enter amount you want to send
             // Withdrawl from your accound and dposit in other account
+            if(log_menu_input==3){
+                int checkag = 1;
+                while (checkag == 1) {
+                    std::cout << "Please enter the account number of the designated transfer destination" << std::endl;
+                    std::cin >> transfer_user_id;
+                    if (accountExists(hashID(transfer_user_id))) {
+                        std::cout << "Please enter the amount you would like to transfer to this account:" << std::endl;
+                        std::cin >> transfer_amount;
+                        if (transfer_amount > 0 && transfer_amount <= getAccountBalance(hashID(user_id), std::to_string(hashPassword(password)))) {
 
+                            transfer(hashID(user_id), std::to_string(hashPassword(password)), hashID(transfer_user_id), transfer_amount);
+                           
+                        }
+                        else {
+                            std::cout << "Invalid transfer amount" << std::endl;
+                            checkag = 2;
+                        }
+                    }
+                    else {
+                        std::cout << "Invalid user ID" << std::endl;
+                    }
+                    std::cout << "Would you like to make another transfer? \n(1) YES\n(2) NO" << std::endl;
+                    std::cin >> checkag;
+                }
+             }
             /// Log Out
             if (log_menu_input == 4) {
                 std::cout << "LOGGING OUT" << std::endl;
@@ -137,6 +165,24 @@ int main() {
             }
 
             /// Delete Account
+            if(log_menu_input==5){
+                std::cout << "Are you sure you would like to delete this account? \n(1) YES\n(2) NO" << std::endl;
+                std::cin >> delete_confirm;
+                if(delete_confirm==1){
+                    std::cout << "You have deleted this account." << std::endl;
+                    deleteAccount(hashID(user_id), std::to_string(hashPassword(password)));
+                    log_menu_input = 4;
+                    logged_in = false;
+                }
+                else if(delete_confirm==2){
+                    std::cout << "You have decided to not delete your account" << std::endl;
+                    log_menu_input = 0;
+                }
+                else{
+                    std::cout << "Invalid input" << std::endl;
+                    log_menu_input = 0;
+                }
+            }
             // Set all data to nothing
 
         }

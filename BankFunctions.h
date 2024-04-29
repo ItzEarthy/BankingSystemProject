@@ -23,4 +23,6 @@ bool accountExists(std::size_t accountNumber);
 
 void transfer(std::size_t accountNumber, const std::string& password, std::size_t transferAccountNumber, double amount);
 
-//void deleteAccount(std::);
+void updateTransfer(std::size_t accountNumber, std::string password, double amount, bool removeMoney);
+
+void deleteAccount(std::size_t accoutnNumber, const std::string& password);
