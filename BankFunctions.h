@@ -13,7 +13,7 @@ double getAccountBalance(std::size_t accountNumber, const std::string& passwordH
 
 std::size_t hashPassword(const std::string& password);
 
-std::size_t hashID(int& user_id);
+std::size_t hashID(int& accountNumber);
 
 bool logIn(std::size_t accountNumber, const std::string& password);
 
