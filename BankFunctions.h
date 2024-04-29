@@ -20,3 +20,7 @@ bool logIn(std::size_t accountNumber, const std::string& password);
 void updateBalance(std::size_t accountNumber, const std::string& password, double* amount, int i);
 
 bool accountExists(std::size_t accountNumber);
+
+void transfer(std::size_t accountNumber, const std::string& password, std::size_t transferAccountNumber, double amount);
+
+//void deleteAccount(std::);
