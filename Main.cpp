@@ -43,14 +43,14 @@ int main() {
                     if (accountExists(hashID(make_user_id))) {
                         std::cout << ".";
                         make_user_id = rand_id(gen);
-                        make_user_id+=1;
+                        //make_user_id+=1;
                     }
 
                     //Create account
                     if (!accountExists(hashID(make_user_id))) {
                         std::cout << "Your User ID: " << make_user_id << std::endl;
                         std::cout << "Create Password: ";
-                        //std::cin >> make_password;
+                        std::cin >> make_password;
 
                         UserInfo UserMake = { hashID(make_user_id), std::to_string(hashPassword(make_password)), 0.00 };
                         storeUserInfo(UserMake);
@@ -58,7 +58,7 @@ int main() {
 
                         make_password = "password";
                         make_user_id = 0;
-                        //menu_input = 0;
+                        menu_input = 0;
                     }
                 }
             }
